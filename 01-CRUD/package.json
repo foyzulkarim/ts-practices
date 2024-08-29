@@ -1,0 +1,24 @@
+{
+  "name": "01-crud",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc", 
+    "watch": "tsc -w",
+    "start": "npm run dev",
+    "dev": "node dist/save-person.js" 
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/node": "^22.5.1",
+    "@types/sqlite3": "^3.1.11",
+    "reflect-metadata": "^0.2.2",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.20",
+    "typescript": "^5.5.4"
+  }
+}
