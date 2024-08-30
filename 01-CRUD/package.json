@@ -6,8 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc", 
     "watch": "tsc -w",
-    "start": "npm run dev",
-    "dev": "node dist/crud.js" 
+    "dev": "node dist/crud.js" ,
+    "start": "npm run build && npm run dev"
   },
   "keywords": [],
   "author": "",
