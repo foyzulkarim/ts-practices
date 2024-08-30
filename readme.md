@@ -2,6 +2,8 @@
 
 This repository documents my exploration of TypeScript through practical projects and exercises.
 
+![My TypeScript Journey](./Typescript-journey.png)
+
 ## Learning Plan
 
 My current focus areas include:
