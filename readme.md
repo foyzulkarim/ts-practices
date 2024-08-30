@@ -2,7 +2,13 @@
 
 This repository documents my exploration of TypeScript through practical projects and exercises.
 
-![My TypeScript Journey](./Typescript-journey.png)
+## Video Tutorial
+
+Here is a video tutorial that complements this repository (click the image to watch the playlist):
+
+[![My TypeScript Journey](./Typescript-journey.png)](https://www.youtube.com/playlist?list=PLEYpvDF6qy8YHlvaNdM8_Lx1suLb0UIOH)
+
+
 
 ## Learning Plan
 
