@@ -7,7 +7,7 @@
     "build": "tsc", 
     "watch": "tsc -w",
     "start": "npm run dev",
-    "dev": "node dist/save-person.js" 
+    "dev": "node dist/crud.js" 
   },
   "keywords": [],
   "author": "",

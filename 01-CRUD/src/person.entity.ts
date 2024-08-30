@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  DeleteDateColumn,
   VersionColumn,
 } from 'typeorm';
 
@@ -26,7 +25,7 @@ export class Person {
   phone: string;
 
   @Column()
-  dateOfBirth: Date; // Assuming you'll store dates
+  dateOfBirth: Date;
 
   @Column()
   isDeleted!: boolean;
