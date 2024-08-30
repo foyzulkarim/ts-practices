@@ -5,9 +5,9 @@ async function savePerson() {
   await AppDataSource.initialize();
 
   const person = new Person(
-    `John ${Math.random()} Doe`,
-    `john.${Math.random()}.doe@example.com`,
-    `+1 555 555 555${Math.floor(Math.random() * 100)}`,
+    `John ${Math.random()}`,
+    `john.${Math.random()}@example.com`,
+    `+1 555 555 ${Math.floor(Math.random() * 100)}`,
     new Date(`19${Math.floor(Math.random() * 100) + 50}-01-01`) 
   );
 

@@ -1,13 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, VersionColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  VersionColumn,
+} from 'typeorm';
 
 @Entity()
 export class Person {
-  @PrimaryGeneratedColumn(
-    {
-      type: 'int',
-      name: 'id',
-    }
-  )
+  @PrimaryGeneratedColumn({
+    type: 'int',
+    name: 'id',
+  })
   id!: number;
 
   @Column()
@@ -22,22 +28,19 @@ export class Person {
   @Column()
   dateOfBirth: Date; // Assuming you'll store dates
 
+  @Column()
+  isDeleted!: boolean;
+
   // default value as now
-  @CreateDateColumn(
-  )
+  @CreateDateColumn()
   createdAt!: Date | null;
 
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @Column()
-  isDeleted!: boolean;
-
-  @VersionColumn(
-    {
-      default: 1,
-    }
-  )
+  @VersionColumn({
+    default: 1,
+  })
   version!: number;
 
   // This is a simple constructor to create a Person object
