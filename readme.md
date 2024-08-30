@@ -2,7 +2,7 @@
 
 This repository documents my exploration of TypeScript through practical projects and exercises.
 
-![My TypeScript Journey](./Typescript-journey.png)
+![My TypeScript Journey](./TypeScript-journey.png)
 
 ## Learning Plan
 
