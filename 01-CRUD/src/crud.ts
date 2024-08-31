@@ -132,26 +132,23 @@ const updatePerson = async () => {
     });
   });
 
-  const dateOfBirth = await new Promise<Date>((resolve) => {
-    rl.question(
-      'Enter the date of birth of the person (YYYY-MM-DD):',
-      (answer) => {
-        resolve(new Date(answer));
-      }
-    );
-  });
+  const dateOfBirth: Date | undefined = await new Promise<Date | undefined>(
+    (resolve) => {
+      rl.question(
+        'Enter the date of birth of the person (YYYY-MM-DD):',
+        (answer) => {
+          answer ? resolve(new Date(answer)) : resolve(undefined);
+        }
+      );
+    }
+  );
 
   const updateData: PersonData = {
-    name: '',
-    email: '',
-    phone: '',
-    dateOfBirth: new Date(),
+    name,
+    email,
+    phone,
+    dateOfBirth,
   };
-
-  if (name) updateData.name = name;
-  if (email) updateData.email = email;
-  if (phone) updateData.phone = phone;
-  if (dateOfBirth) updateData.dateOfBirth = dateOfBirth;
 
   const updatedPerson = await personService.update(id, updateData);
 
@@ -216,7 +213,6 @@ const run = async () => {
   }
 };
 
-// run();
 (async () => {
   console.log('Welcome to the CRUD application.');
   await AppDataSource.initialize();

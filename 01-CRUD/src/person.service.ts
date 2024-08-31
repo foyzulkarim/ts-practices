@@ -5,7 +5,7 @@ export type PersonData = {
   name: string;
   email: string;
   phone: string;
-  dateOfBirth: Date;
+  dateOfBirth?: Date;
 };
 
 export class PersonService {
@@ -15,17 +15,12 @@ export class PersonService {
     this.personRepository = new PersonRepository();
   }
 
-  async save(data: {
-    name: string;
-    email: string;
-    phone: string;
-    dateOfBirth: Date;
-  }): Promise<Person> {
+  async save(data: PersonData): Promise<Person> {
     const person = new Person(
       data.name,
       data.email,
       data.phone,
-      data.dateOfBirth
+      data.dateOfBirth ?? new Date()
     );
     return this.personRepository.save(person);
   }
@@ -37,22 +32,18 @@ export class PersonService {
       return null;
     }
 
-    if (data.name) {
-      person.name = data.name;
-    }
-    if (data.email) {
-      person.email = data.email;
-    }
-    if (data.phone) {
-      person.phone = data.phone;
-    }
-    if (data.dateOfBirth) {
-      person.dateOfBirth = data.dateOfBirth;
-    }
+    const { name, email, phone, dateOfBirth } = data;
+    const updatedPerson = {
+      ...person,
+      ...(name && { name }),
+      ...(email && { email }),
+      ...(phone && { phone }),
+      ...(dateOfBirth && { dateOfBirth }),
+    };
 
-    console.log('Updating person:', person);
+    console.log('Updating person:', updatedPerson);
 
-    return this.personRepository.update(person);
+    return this.personRepository.update(updatedPerson);
   }
 
   // delete method. check if the id is present or not and then delete the person
