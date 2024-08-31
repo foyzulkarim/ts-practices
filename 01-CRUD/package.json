@@ -4,9 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc", 
+    "clean": "rm -rf dist/*",
+    "build": "npm run clean && tsc",
     "watch": "tsc -w",
-    "dev": "node dist/crud.js" ,
+    "dev": "nodemon dist/crud.js",
     "start": "npm run build && npm run dev"
   },
   "keywords": [],
@@ -16,6 +17,7 @@
   "dependencies": {
     "@types/node": "^22.5.1",
     "@types/sqlite3": "^3.1.11",
+    "nodemon": "^3.1.4",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
     "typeorm": "^0.3.20",
