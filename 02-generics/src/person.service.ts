@@ -47,13 +47,14 @@ export class PersonService {
   }
 
   // delete method. check if the id is present or not and then delete the person
-  async delete(id: number): Promise<void> {
+  async delete(id: number): Promise<boolean> {
     const person = await this.personRepository.findOne(id);
     if (!person) {
-      return;
+      return false;
     }
 
     await this.personRepository.delete(id);
+    return true;
   }
 
   async findOne(id: number): Promise<Person | null> {

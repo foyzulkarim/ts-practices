@@ -12,41 +12,30 @@ const rl = readline.createInterface({
 
 let personService: PersonService;
 
-const savePerson = async () => {
-  // read input from terminal or console. use async and await to wait for the input
-  const name = await new Promise<string>((resolve) => {
-    const prompt = 'Enter the name of the person:';
-    rl.question(prompt, (answer: string | PromiseLike<string>) => {
-      resolve(answer);
+const askQuestion = async <T = string>(
+  prompt: string,
+  parser?: (input: string) => T
+): Promise<T> => {
+  return new Promise<T>((resolve, reject) => {
+    if (parser === undefined && typeof {} as T !== 'string') {
+      reject(new Error('Parser must be provided for non-string types'));
+      return;
+    }
+
+    const finalParser = parser ?? ((input: string) => input as unknown as T);
+
+    rl.question(prompt, (answer: string) => {
+      resolve(finalParser(answer));
     });
   });
+};
 
-  const email = await new Promise<string>((resolve) => {
-    rl.question(
-      'Enter the email of the person:',
-      (answer: string | PromiseLike<string>) => {
-        resolve(answer);
-      }
-    );
-  });
 
-  const phone = await new Promise<string>((resolve) => {
-    rl.question(
-      'Enter the phone of the person:',
-      (answer: string | PromiseLike<string>) => {
-        resolve(answer);
-      }
-    );
-  });
-
-  const dateOfBirth = await new Promise<Date>((resolve) => {
-    rl.question(
-      'Enter the date of birth of the person (YYYY-MM-DD):',
-      (answer: string | number | Date) => {
-        resolve(new Date(answer));
-      }
-    );
-  });
+const savePerson = async () => {
+  const name = await askQuestion('Enter the name of the person: ');
+  const email = await askQuestion('Enter the email of the person: ');
+  const phone = await askQuestion('Enter the phone of the person: ');
+  const dateOfBirth = await askQuestion<Date>('Enter the date of birth of the person (YYYY-MM-DD): ', (input) => new Date(input));
 
   // create a new person object using the input
   const person = new Person(name, email, phone, dateOfBirth);
@@ -58,11 +47,7 @@ const savePerson = async () => {
 };
 
 const getPersonById = async () => {
-  const id = await new Promise<number>((resolve) => {
-    rl.question('Enter the id of the person:', (answer) => {
-      resolve(parseInt(answer));
-    });
-  });
+  const id = await askQuestion<number>('Enter the id of the person: ', (input) => parseInt(input));
 
   const person = await personService.findOne(id);
   if (person) {
@@ -74,11 +59,7 @@ const getPersonById = async () => {
 };
 
 const searchPeople = async () => {
-  const keyword = await new Promise<string>((resolve) => {
-    rl.question('Enter the keyword to search:', (answer) => {
-      resolve(answer);
-    });
-  });
+  const keyword = await askQuestion('Enter the keyword to search: ');
 
   const people = await personService.search(keyword);
   if (people.length) {
@@ -90,11 +71,7 @@ const searchPeople = async () => {
 };
 
 const updatePerson = async () => {
-  const id = await new Promise<number>((resolve) => {
-    rl.question('Enter the id of the person to update:', (answer) => {
-      resolve(parseInt(answer));
-    });
-  });
+  const id = await askQuestion<number>('Enter the id of the person to update: ', (input) => parseInt(input));
 
   const person = await personService.findOne(id);
   if (!person) {
@@ -114,34 +91,10 @@ const updatePerson = async () => {
     'You can add new values and press enter or simply press enter to keep the old value'
   );
 
-  const name = await new Promise<string>((resolve) => {
-    rl.question('Enter the name of the person to update:', (answer) => {
-      resolve(answer);
-    });
-  });
-
-  const email = await new Promise<string>((resolve) => {
-    rl.question('Enter the email of the person:', (answer) => {
-      resolve(answer);
-    });
-  });
-
-  const phone = await new Promise<string>((resolve) => {
-    rl.question('Enter the phone of the person:', (answer) => {
-      resolve(answer);
-    });
-  });
-
-  const dateOfBirth: Date | undefined = await new Promise<Date | undefined>(
-    (resolve) => {
-      rl.question(
-        'Enter the date of birth of the person (YYYY-MM-DD):',
-        (answer) => {
-          answer ? resolve(new Date(answer)) : resolve(undefined);
-        }
-      );
-    }
-  );
+  const name = await askQuestion('Enter the name of the person to update: ');
+  const email = await askQuestion('Enter the email of the person: ');
+  const phone = await askQuestion('Enter the phone of the person: ');
+const dateOfBirth = await askQuestion<Date>('Enter the date of birth of the person (YYYY-MM-DD): ', (input) => new Date(input));
 
   const updateData: PersonData = {
     name,
@@ -161,14 +114,15 @@ const updatePerson = async () => {
 };
 
 const deletePerson = async () => {
-  const id = await new Promise<number>((resolve) => {
-    rl.question('Enter the id of the person to delete:', (answer) => {
-      resolve(parseInt(answer));
-    });
-  });
+  const idStr = await askQuestion('Enter the id of the person to delete: ');
+  const id = parseInt(idStr);
 
-  await personService.delete(id);
-  console.log('Person deleted successfully');
+  const isSuccess: boolean = await personService.delete(id);
+  if (isSuccess) {
+    console.log('Person deleted successfully');
+  } else {
+    console.log('Person not found');
+  }
 };
 
 // write console statements to take input for the person (name, email, phone, dateOfBirth) and prepare the object
@@ -178,11 +132,7 @@ const run = async () => {
 
   // 1 for save, 2 for get by id, 3 for search, 4 for update, 5 for delete
   const msg = `1. Save a person \n2. Get a person by id \n3. Search people \n4. Update a person \n5. Delete a person\n`;
-  const option = await new Promise<string>((resolve) => {
-    rl.question(msg, (answer) => {
-      resolve(answer);
-    });
-  });
+  const option = await askQuestion(msg);
 
   if (option === '1') {
     await savePerson();
@@ -223,11 +173,7 @@ const run = async () => {
 
     // ask question to continue or not
     // if no, break the loop
-    const answer = await new Promise<string>((resolve) => {
-      rl.question('Do you want to continue? (yes/no):', (answer) => {
-        resolve(answer);
-      });
-    });
+    const answer = await askQuestion('Do you want to continue? (yes/no): ');
 
     if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
       rl.close();
