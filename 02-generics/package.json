@@ -7,7 +7,7 @@
     "clean": "rm -rf dist/*",
     "build": "npm run clean && tsc",
     "watch": "tsc -w",
-    "dev": "nodemon dist/crud.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/crud.ts",
     "start": "npm run build && npm run dev"
   },
   "keywords": [],
@@ -22,5 +22,8 @@
     "sqlite3": "^5.1.7",
     "typeorm": "^0.3.20",
     "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^2.0.0"
   }
 }

@@ -12,30 +12,29 @@ const rl = readline.createInterface({
 
 let personService: PersonService;
 
-const askQuestion = async <T = string>(
+const askQuestion = async <T>(
   prompt: string,
-  parser?: (input: string) => T
+  parser: (input: string) => T = (input: string) => input as unknown as T
 ): Promise<T> => {
   return new Promise<T>((resolve, reject) => {
-    if (parser === undefined && typeof {} as T !== 'string') {
-      reject(new Error('Parser must be provided for non-string types'));
-      return;
-    }
-
-    const finalParser = parser ?? ((input: string) => input as unknown as T);
-
     rl.question(prompt, (answer: string) => {
-      resolve(finalParser(answer));
+      try {
+        resolve(parser(answer));
+      } catch (error) {
+        reject(error instanceof Error ? error : new Error(String(error)));
+      }
     });
   });
 };
 
-
 const savePerson = async () => {
-  const name = await askQuestion('Enter the name of the person: ');
-  const email = await askQuestion('Enter the email of the person: ');
-  const phone = await askQuestion('Enter the phone of the person: ');
-  const dateOfBirth = await askQuestion<Date>('Enter the date of birth of the person (YYYY-MM-DD): ', (input) => new Date(input));
+  const name = await askQuestion<string>('Enter the name of the person: ');
+  const email = await askQuestion<string>('Enter the email of the person: ');
+  const phone = await askQuestion<string>('Enter the phone of the person: ');
+  const dateOfBirth = await askQuestion<Date>(
+    'Enter the date of birth of the person (YYYY-MM-DD): ',
+    (input) => new Date(input)
+  );
 
   // create a new person object using the input
   const person = new Person(name, email, phone, dateOfBirth);
@@ -47,7 +46,10 @@ const savePerson = async () => {
 };
 
 const getPersonById = async () => {
-  const id = await askQuestion<number>('Enter the id of the person: ', (input) => parseInt(input));
+  const id = await askQuestion<number>(
+    'Enter the id of the person: ',
+    (input) => parseInt(input)
+  );
 
   const person = await personService.findOne(id);
   if (person) {
@@ -59,7 +61,7 @@ const getPersonById = async () => {
 };
 
 const searchPeople = async () => {
-  const keyword = await askQuestion('Enter the keyword to search: ');
+  const keyword = await askQuestion<string>('Enter the keyword to search: ');
 
   const people = await personService.search(keyword);
   if (people.length) {
@@ -71,7 +73,10 @@ const searchPeople = async () => {
 };
 
 const updatePerson = async () => {
-  const id = await askQuestion<number>('Enter the id of the person to update: ', (input) => parseInt(input));
+  const id = await askQuestion<number>(
+    'Enter the id of the person to update: ',
+    (input) => parseInt(input)
+  );
 
   const person = await personService.findOne(id);
   if (!person) {
@@ -91,10 +96,15 @@ const updatePerson = async () => {
     'You can add new values and press enter or simply press enter to keep the old value'
   );
 
-  const name = await askQuestion('Enter the name of the person to update: ');
-  const email = await askQuestion('Enter the email of the person: ');
-  const phone = await askQuestion('Enter the phone of the person: ');
-const dateOfBirth = await askQuestion<Date>('Enter the date of birth of the person (YYYY-MM-DD): ', (input) => new Date(input));
+  const name = await askQuestion<string>(
+    'Enter the name of the person to update: '
+  );
+  const email = await askQuestion<string>('Enter the email of the person: ');
+  const phone = await askQuestion<string>('Enter the phone of the person: ');
+  const dateOfBirth = await askQuestion<Date>(
+    'Enter the date of birth of the person (YYYY-MM-DD): ',
+    (input) => new Date(input)
+  );
 
   const updateData: PersonData = {
     name,
@@ -114,8 +124,10 @@ const dateOfBirth = await askQuestion<Date>('Enter the date of birth of the pers
 };
 
 const deletePerson = async () => {
-  const idStr = await askQuestion('Enter the id of the person to delete: ');
-  const id = parseInt(idStr);
+  const id = await askQuestion<number>(
+    'Enter the id of the person to delete: ',
+    (input) => parseInt(input)
+  );
 
   const isSuccess: boolean = await personService.delete(id);
   if (isSuccess) {
@@ -132,7 +144,7 @@ const run = async () => {
 
   // 1 for save, 2 for get by id, 3 for search, 4 for update, 5 for delete
   const msg = `1. Save a person \n2. Get a person by id \n3. Search people \n4. Update a person \n5. Delete a person\n`;
-  const option = await askQuestion(msg);
+  const option = await askQuestion<string>(msg);
 
   if (option === '1') {
     await savePerson();
@@ -164,7 +176,7 @@ const run = async () => {
 };
 
 (async () => {
-  console.log('Welcome to the CRUD application.');
+  console.log('Welcome to the CRUD application.', new Date());
   await AppDataSource.initialize();
   personService = new PersonService();
   // keep running the application
@@ -173,11 +185,15 @@ const run = async () => {
 
     // ask question to continue or not
     // if no, break the loop
-    const answer = await askQuestion('Do you want to continue? (yes/no): ');
+    const answer = await askQuestion<string>(
+      'Do you want to continue? (yes/no): ',
+      (input) => input.toLowerCase()
+    );
 
-    if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    if (answer === 'no' || answer === 'n') {
       rl.close();
       break;
     }
   }
+  console.log('Please press CTRL+C to exit the application...');
 })();
