@@ -171,12 +171,11 @@ const run = async () => {
   // delete person input
   if (option === '5') {
     await deletePerson();
-    return;
   }
 };
 
 (async () => {
-  console.log('Welcome to the CRUD application.', new Date());
+  console.log('Welcome to the CRUD application.');
   await AppDataSource.initialize();
   personService = new PersonService();
   // keep running the application
