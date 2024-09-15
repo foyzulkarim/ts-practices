@@ -1,16 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column } from 'typeorm';
+
+import { BaseEntity } from '../common/data/Entity';
 
 @Entity()
-export class Location {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
+export class Location extends BaseEntity {
   @Column()
   address: string;
 
@@ -26,12 +19,6 @@ export class Location {
   @Column()
   country: string;
 
-  @CreateDateColumn()
-  createdAt!: Date;
-
-  @UpdateDateColumn()
-  updatedAt!: Date;
-
   constructor(
     address: string,
     city: string,
@@ -39,6 +26,7 @@ export class Location {
     zipCode: string,
     country: string
   ) {
+    super();
     this.address = address;
     this.city = city;
     this.state = state;

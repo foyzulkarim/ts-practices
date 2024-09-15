@@ -1,20 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  VersionColumn,
-} from 'typeorm';
+import { Entity, Column } from 'typeorm';
+
+import { BaseEntity } from '../common/data/Entity';
 
 @Entity()
-export class Person {
-  @PrimaryGeneratedColumn({
-    type: 'int',
-    name: 'id',
-  })
-  id!: number;
-
+export class Person extends BaseEntity {
   @Column()
   name: string;
 
@@ -27,27 +16,11 @@ export class Person {
   @Column()
   dateOfBirth: Date;
 
-  @Column()
-  isDeleted!: boolean;
-
-  // default value as now
-  @CreateDateColumn()
-  createdAt!: Date | null;
-
-  @UpdateDateColumn()
-  updatedAt!: Date;
-
-  @VersionColumn({
-    default: 1,
-  })
-  version!: number;
-
-  // This is a simple constructor to create a Person object
   constructor(name: string, email: string, phone: string, dateOfBirth: Date) {
+    super();
     this.name = name;
     this.email = email;
     this.phone = phone;
     this.dateOfBirth = dateOfBirth;
-    this.isDeleted = false;
   }
 }
