@@ -1,4 +1,4 @@
-import { AppDataSource } from './data-source';
+import { AppDataSource } from '../data-source';
 import { Person } from './person.entity';
 import { Repository, Like, In } from 'typeorm';
 
